@@ -9,8 +9,6 @@ function Table() {
 
   const filterByAscending = useSelector(state => state.filters.sortByAscending);
 
-  console.log('filtersByAscending', filterByAscending);
-
   const sort = () => {
     if (!filterByAscending) {
       dispatch({ type: 'data/sortByAscending' });
@@ -21,36 +19,44 @@ function Table() {
 
   return (
     <div>
-      <table className="Table">
-        <thead>
-          <TableHead
-            sort={sort}
-            number="Номер"
-            name="Имя"
-            lastName="Фамилия"
-            email="Email"
-            phone="Телефон"
-            adress="Адрес"
-            description="Описание"
-          />
-        </thead>
-        <tbody>
-          {tableData.map(tableDataItem =>
-            <TableRow
-              key={tableDataItem.id}
-              number={tableDataItem.id}
-              name={tableDataItem.firstName}
-              lastName={tableDataItem.lastName}
-              email={tableDataItem.email}
-              phone={tableDataItem.phone}
-              adress={tableDataItem.adress.city}
-              description={tableDataItem.description}
-            />
-          )}
-        </tbody>
-      </table>
+      {
+        tableData.length
+          ?
+          <table className="Table">
+            <thead>
+              <TableHead
+                sort={sort}
+                number="Номер"
+                name="Имя"
+                lastName="Фамилия"
+                email="Email"
+                phone="Телефон"
+                adress="Адрес"
+                description="Описание"
+              />
+            </thead>
+            <tbody>
+              {tableData.map((tableDataItem, index) => {
+                return (
+                  <TableRow
+                    key={index}
+                    number={tableDataItem.id}
+                    name={tableDataItem.firstName}
+                    lastName={tableDataItem.lastName}
+                    email={tableDataItem.email}
+                    phone={tableDataItem.phone}
+                    adress={tableDataItem.adress.city}
+                    description={tableDataItem.description}
+                  />
+                )
+              })
+              }
+            </tbody>
+          </table>
+          :
+          <div>is loading ....................</div>
+      }
     </div>
-
   )
 }
 
