@@ -1,5 +1,10 @@
+import axios from 'axios';
+import { API_DATA } from './config';
+
 const initialState = {
   data: [],
+  dataPagination: [],
+  dataPages: [],
   filters: {
     sortByAscending: false
   }
@@ -15,23 +20,23 @@ const sortByDescending = data => data.sort(function (a, b) {
   return b.id - a.id;
 });
 
-// const apiData = () => {
-//   let r = new XMLHttpRequest();
-//   r.open("GET", "http://www.filltext.com/?rows=100&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&adress=%7BaddressObject%7D&description=%7Blorem%7C32%7D", true);
+// массив для номеров страниц пагинации
+const numArr = num => {
+  const arr = [];
 
-//   r.onreadystatechange = () => {
-//     if (r.readyState != 4 || r.status != 200) return;
-//     let data = JSON.parse(r.responseText);
-//   };
-//   r.send();
-// }
+  for (let i = 1; i <= num; i++) {
+    arr.push(i);
+  }
+
+  return arr;
+}
 
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
     case 'data/sortByAscending': {
       return JSON.parse(JSON.stringify({
         ...state,
-        data: sortByAscending(state.data),
+        dataPagination: sortByAscending(state.dataPagination),
         filters: {
           ...state.filters,
           sortByAscending: true,
@@ -41,17 +46,25 @@ export default function appReducer(state = initialState, action) {
     case 'data/sortByDescending': {
       return JSON.parse(JSON.stringify({
         ...state,
-        data: sortByDescending(state.data),
+        dataPagination: sortByDescending(state.dataPagination),
         filters: {
           ...state.filters,
           sortByAscending: false,
         },
       }))
     }
-    case 'data/dataLoaded': {
+    case 'data/dataLoaded': { // загрузка данных с сервера
       return JSON.parse(JSON.stringify({
         ...state,
         data: action.payload,
+        dataPagination: action.payload.slice(state.dataPagination.length, 25),
+        dataPages: numArr(Math.ceil(action.payload.length / 25)),
+      }))
+    }
+    case 'data/pagination': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        dataPagination: state.data.slice(action.payload[0], action.payload[1]),
       }))
     }
     default:
@@ -59,14 +72,9 @@ export default function appReducer(state = initialState, action) {
   }
 };
 
-export async function fetchData(dispatch, getState) {
-  let r = new XMLHttpRequest();
-  r.open("GET", "http://www.filltext.com/?rows=100&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&adress=%7BaddressObject%7D&description=%7Blorem%7C32%7D", true);
+// функция загрузки данных с сервера
+export async function fetchData(dispatch) {
+  const res = await axios.get(API_DATA);
 
-  r.onreadystatechange = () => {
-    if (r.readyState != 4 || r.status != 200) return;
-    let data = JSON.parse(r.responseText);
-    dispatch({ type: 'data/dataLoaded', payload: data })
-  };
-  r.send();
+  dispatch({ type: 'data/dataLoaded', payload: res.data });
 }
