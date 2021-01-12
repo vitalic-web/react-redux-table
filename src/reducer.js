@@ -2,9 +2,11 @@ import axios from 'axios';
 import { API_DATA } from './config';
 
 const initialState = {
-  data: [],
-  dataPagination: [],
-  dataPages: [],
+  data: {
+    dataMain: [],
+    dataPagination: [],
+    dataPages: [],
+  },
   filters: {
     sortByAscending: false
   }
@@ -36,7 +38,10 @@ export default function appReducer(state = initialState, action) {
     case 'data/sortByAscending': {
       return JSON.parse(JSON.stringify({
         ...state,
-        dataPagination: sortByAscending(state.dataPagination),
+        data: {
+          ...state.data,
+          dataPagination: sortByAscending(state.data.dataPagination),
+        },
         filters: {
           ...state.filters,
           sortByAscending: true,
@@ -46,7 +51,10 @@ export default function appReducer(state = initialState, action) {
     case 'data/sortByDescending': {
       return JSON.parse(JSON.stringify({
         ...state,
-        dataPagination: sortByDescending(state.dataPagination),
+        data: {
+          ...state.data,
+          dataPagination: sortByDescending(state.data.dataPagination),
+        },
         filters: {
           ...state.filters,
           sortByAscending: false,
@@ -56,15 +64,21 @@ export default function appReducer(state = initialState, action) {
     case 'data/dataLoaded': { // загрузка данных с сервера
       return JSON.parse(JSON.stringify({
         ...state,
-        data: action.payload,
-        dataPagination: action.payload.slice(state.dataPagination.length, 25),
-        dataPages: numArr(Math.ceil(action.payload.length / 25)),
+        data: {
+          ...state.data,
+          dataMain: action.payload,
+          dataPagination: action.payload.slice(0, 25),
+          dataPages: numArr(Math.ceil(action.payload.length / 25)),
+        }
       }))
     }
     case 'data/pagination': {
       return JSON.parse(JSON.stringify({
         ...state,
-        dataPagination: state.data.slice(action.payload[0], action.payload[1]),
+        data: {
+          ...state.data,
+          dataPagination: state.data.dataMain.slice(action.payload[0], action.payload[1]),
+        }
       }))
     }
     default:
