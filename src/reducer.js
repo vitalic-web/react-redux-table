@@ -6,6 +6,7 @@ const initialState = {
     dataMain: [],
     dataPagination: [],
     dataPages: [],
+    dataSearch: [],
   },
   filters: {
     sortByAscending: false
@@ -31,6 +32,25 @@ const numArr = num => {
   }
 
   return arr;
+}
+
+// фильтр по ключевому слову
+const searchFilter = (arr, searchWord) => {
+  const newArr = [];
+
+  arr.forEach(item => {
+    for (let key in item) {
+      if (item[key].toString().includes(searchWord)) {
+        newArr.push(item);
+      } else for (let key2 in item[key]) {
+        if (item[key][key2].toString().includes(searchWord)) {
+          newArr.push(item);
+        }
+      }
+    }
+  })
+
+  return newArr;
 }
 
 export default function appReducer(state = initialState, action) {
@@ -78,6 +98,15 @@ export default function appReducer(state = initialState, action) {
         data: {
           ...state.data,
           dataPagination: state.data.dataMain.slice(action.payload[0], action.payload[1]),
+        }
+      }))
+    }
+    case 'data/search': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataSearch: searchFilter(state.data.dataMain, action.payload),
         }
       }))
     }
