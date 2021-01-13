@@ -9,8 +9,68 @@ const initialState = {
     dataSearch: [],
   },
   filters: {
-    sortByAscending: false
+    id: {
+      idUp: false,
+      idDown: false,
+    },
+    firstName: {
+      firstNameUp: false,
+      firstNameDown: false,
+    },
+    lastName: {
+      lastNameUp: false,
+      lastNameDown: false,
+    },
+    email: {
+      emailUp: false,
+      emailDown: false,
+    },
+    phone: {
+      phoneUp: false,
+      phoneDown: false,
+    },
+    city: {
+      cityUp: false,
+      cityDown: false,
+    }
   }
+}
+
+// функция загрузки данных с сервера
+export async function fetchData(dispatch) {
+  const res = await axios.get(API_DATA);
+
+  dispatch({ type: 'data/dataLoaded', payload: res.data });
+}
+
+// массив для номеров страниц пагинации
+const numArr = num => {
+  const arr = [];
+
+  for (let i = 1; i <= num; i++) {
+    arr.push(i);
+  }
+
+  return arr;
+}
+
+// фильтр по ключевому слову
+const searchFilter = (arr, searchWord) => {
+  const newArr = [];
+
+  arr.forEach(item => {
+    for (let key in item) {
+      if (item[key].toString().includes(searchWord)) {
+        newArr.push(item);
+      } else for (let key2 in item[key]) {
+        if (item[key][key2].toString().includes(searchWord)) {
+          newArr.push(item);
+        }
+      }
+    }
+  })
+
+  return newArr;
 }
 
 // сортировка по возрастанию
@@ -51,7 +111,7 @@ const sortByAscending = (data, column) => {
         return 0;
       })
     }
-    case 'Адрес': {
+    case 'Город': {
       return data.sort((a, b) => {
         if (a.adress.city < b.adress.city) return -1;
         if (a.adress.city > b.adress.city) return 1;
@@ -101,7 +161,7 @@ const sortByDescending = (data, column) => {
         return 0;
       })
     }
-    case 'Адрес': {
+    case 'Город': {
       return data.sort((a, b) => {
         if (a.adress.city > b.adress.city) return -1;
         if (a.adress.city < b.adress.city) return 1;
@@ -113,64 +173,8 @@ const sortByDescending = (data, column) => {
   }
 };
 
-// массив для номеров страниц пагинации
-const numArr = num => {
-  const arr = [];
-
-  for (let i = 1; i <= num; i++) {
-    arr.push(i);
-  }
-
-  return arr;
-}
-
-// фильтр по ключевому слову
-const searchFilter = (arr, searchWord) => {
-  const newArr = [];
-
-  arr.forEach(item => {
-    for (let key in item) {
-      if (item[key].toString().includes(searchWord)) {
-        newArr.push(item);
-      } else for (let key2 in item[key]) {
-        if (item[key][key2].toString().includes(searchWord)) {
-          newArr.push(item);
-        }
-      }
-    }
-  })
-
-  return newArr;
-}
-
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
-    case 'data/sortByAscending': {
-      return JSON.parse(JSON.stringify({
-        ...state,
-        data: {
-          ...state.data,
-          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
-        },
-        filters: {
-          ...state.filters,
-          sortByAscending: true,
-        },
-      }))
-    }
-    case 'data/sortByDescending': {
-      return JSON.parse(JSON.stringify({
-        ...state,
-        data: {
-          ...state.data,
-          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
-        },
-        filters: {
-          ...state.filters,
-          sortByAscending: false,
-        },
-      }))
-    }
     case 'data/dataLoaded': { // загрузка данных с сервера
       return JSON.parse(JSON.stringify({
         ...state,
@@ -200,14 +204,271 @@ export default function appReducer(state = initialState, action) {
         }
       }))
     }
+    case 'data/sortIdUp': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          city: '',
+          id: {
+            ...state.filters.id,
+            idUp: true,
+            idDown: false,
+          }
+        },
+      }))
+    }
+    case 'data/sortIdDown': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          city: '',
+          id: {
+            ...state.filters.id,
+            idUp: false,
+            idDown: true,
+          }
+        },
+      }))
+    }
+    case 'data/sortFirstNameUp': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          city: '',
+          firstName: {
+            ...state.filters.firstName,
+            firstNameUp: true,
+            firstNameDown: false,
+          }
+        },
+      }))
+    }
+    case 'data/sortFirstNameDown': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          city: '',
+          firstName: {
+            ...state.filters.firstName,
+            firstNameUp: false,
+            firstNameDown: true,
+          }
+        },
+      }))
+    }
+    case 'data/sortLastNameUp': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          email: '',
+          phone: '',
+          city: '',
+          lastName: {
+            ...state.filters.lastName,
+            lastNameUp: true,
+            lastNameDown: false,
+          }
+        },
+      }))
+    }
+    case 'data/sortLastNameDown': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          email: '',
+          phone: '',
+          city: '',
+          lastName: {
+            ...state.filters.lastName,
+            lastNameUp: false,
+            lastNameDown: true,
+          }
+        },
+      }))
+    }
+    case 'data/sortEmailUp': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          lastName: '',
+          phone: '',
+          city: '',
+          email: {
+            ...state.filters.email,
+            emailUp: true,
+            emailDown: false,
+          }
+        },
+      }))
+    }
+    case 'data/sortEmailDown': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          lastName: '',
+          phone: '',
+          city: '',
+          email: {
+            ...state.filters.email,
+            emailUp: false,
+            emailDown: true,
+          }
+        },
+      }))
+    }
+    case 'data/sortPhoneUp': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          city: '',
+          phone: {
+            ...state.filters.phone,
+            phoneUp: true,
+            phoneDown: false,
+          }
+        },
+      }))
+    }
+    case 'data/sortPhoneDown': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          city: '',
+          phone: {
+            ...state.filters.phone,
+            phoneUp: false,
+            phoneDown: true,
+          }
+        },
+      }))
+    }
+    case 'data/sortCityUp': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          city: {
+            ...state.filters.city,
+            cityUp: true,
+            cityDown: false,
+          }
+        },
+      }))
+    }
+    case 'data/sortCityDown': {
+      return JSON.parse(JSON.stringify({
+        ...state,
+        data: {
+          ...state.data,
+          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
+        },
+        filters: {
+          ...state.filters,
+          id: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          city: {
+            ...state.filters.city,
+            cityUp: false,
+            cityDown: true,
+          }
+        },
+      }))
+    }
     default:
       return state;
   }
 };
-
-// функция загрузки данных с сервера
-export async function fetchData(dispatch) {
-  const res = await axios.get(API_DATA);
-
-  dispatch({ type: 'data/dataLoaded', payload: res.data });
-}

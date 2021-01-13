@@ -5,6 +5,7 @@ import TableHead from './TableHead';
 import TableRow from './TableRow';
 import PaginationNumber from './PaginationNumber';
 import Search from './Search';
+import UserInfo from './UserInfo';
 
 function Table() {
   const tableData = useSelector(state => state.data.dataMain);
@@ -12,56 +13,69 @@ function Table() {
   const tableDataPages = useSelector(state => state.data.dataPages);
   const tableDataSearch = useSelector(state => state.data.dataSearch);
   const dispatch = useDispatch();
-  const filterByAscending = useSelector(state => state.filters.sortByAscending);
+  const filters = useSelector(state => state.filters);
   const [searchWord, setSearchWord] = useState('');
   const [isSearch, setIsSearch] = useState(false);
+  const [userCard, setUserCard] = useState('');
 
   // сортировка по возрастанию/убыванию
-  const sortByNumber = () => {
-    if (!filterByAscending) {
-      dispatch({ type: 'data/sortByAscending', payload: 'Номер' });
-    } else {
-      dispatch({ type: 'data/sortByDescending', payload: 'Номер' });
+  const sortById = e => {
+    if (!filters.id.idUp) {
+      dispatch({ type: 'data/sortIdUp', payload: e.target.innerText });
+    }
+
+    if (filters.id.idUp) {
+      dispatch({ type: 'data/sortIdDown', payload: e.target.innerText });
     }
   }
 
-  const sortByFirstName = () => {
-    if (!filterByAscending) {
-      dispatch({ type: 'data/sortByAscending', payload: 'Имя' });
-    } else {
-      dispatch({ type: 'data/sortByDescending', payload: 'Имя' });
+  const sortByFirstName = e => {
+    if (!filters.firstName.firstNameUp) {
+      dispatch({ type: 'data/sortFirstNameUp', payload: e.target.innerText });
+    }
+
+    if (filters.firstName.firstNameUp) {
+      dispatch({ type: 'data/sortFirstNameDown', payload: e.target.innerText });
     }
   }
 
-  const sortByLastName = () => {
-    if (!filterByAscending) {
-      dispatch({ type: 'data/sortByAscending', payload: 'Фамилия' });
-    } else {
-      dispatch({ type: 'data/sortByDescending', payload: 'Фамилия' });
+  const sortByLastName = e => {
+    if (!filters.lastName.lastNameUp) {
+      dispatch({ type: 'data/sortLastNameUp', payload: e.target.innerText });
+    }
+
+    if (filters.lastName.lastNameUp) {
+      dispatch({ type: 'data/sortLastNameDown', payload: e.target.innerText });
     }
   }
 
-  const sortByEmail = () => {
-    if (!filterByAscending) {
-      dispatch({ type: 'data/sortByAscending', payload: 'Email' });
-    } else {
-      dispatch({ type: 'data/sortByDescending', payload: 'Email' });
+  const sortByEmail = e => {
+    if (!filters.email.emailUp) {
+      dispatch({ type: 'data/sortEmailUp', payload: e.target.innerText });
+    }
+
+    if (filters.email.emailUp) {
+      dispatch({ type: 'data/sortEmailDown', payload: e.target.innerText });
     }
   }
 
-  const sortByPhone = () => {
-    if (!filterByAscending) {
-      dispatch({ type: 'data/sortByAscending', payload: 'Телефон' });
-    } else {
-      dispatch({ type: 'data/sortByDescending', payload: 'Телефон' });
+  const sortByPhone = e => {
+    if (!filters.phone.phoneUp) {
+      dispatch({ type: 'data/sortPhoneUp', payload: e.target.innerText });
+    }
+
+    if (filters.phone.phoneUp) {
+      dispatch({ type: 'data/sortPhoneDown', payload: e.target.innerText });
     }
   }
 
-  const sortByAdress = () => {
-    if (!filterByAscending) {
-      dispatch({ type: 'data/sortByAscending', payload: 'Адрес' });
-    } else {
-      dispatch({ type: 'data/sortByDescending', payload: 'Адрес' });
+  const sortByCity = e => {
+    if (!filters.city.cityUp) {
+      dispatch({ type: 'data/sortCityUp', payload: e.target.innerText });
+    }
+
+    if (filters.city.cityUp) {
+      dispatch({ type: 'data/sortCityDown', payload: e.target.innerText });
     }
   }
 
@@ -75,8 +89,16 @@ function Table() {
   // поиск по ключевому слову
   const search = e => {
     e.preventDefault();
+    setUserCard('');
     dispatch({ type: 'data/search', payload: searchWord });
     setIsSearch(true);
+  }
+
+  // показ выбранного юзера
+  const showUserCard = e => {
+    const currentUser = (JSON.parse(JSON.stringify(e.target.parentNode.innerText))).split('\t');
+
+    setUserCard(tableDataPagination.find(user => parseInt(user.id) === parseInt(currentUser[0])));
   }
 
   return (
@@ -90,22 +112,47 @@ function Table() {
               searchWord={searchWord}
               setSearchWord={setSearchWord}
               setIsSearch={setIsSearch}
+              setUserCard={setUserCard}
             />
+            <div>
+              {filters.id.idUp && ' ННН '}
+              {filters.id.idDown && ' ннн '}
+            </div>
+            <div>
+              {filters.firstName.firstNameUp && ' ИИИ '}
+              {filters.firstName.firstNameDown && ' иии '}
+            </div>
+            <div>
+              {filters.lastName.lastNameUp && ' ФФФ '}
+              {filters.lastName.lastNameDown && ' ффф '}
+            </div>
+            <div>
+              {filters.email.emailUp && ' EEE '}
+              {filters.email.emailDown && ' eee '}
+            </div>
+            <div>
+              {filters.phone.phoneUp && ' ТТТ '}
+              {filters.phone.phoneDown && ' ттт '}
+            </div>
+            <div>
+              {filters.city.cityUp && ' ГГГ '}
+              {filters.city.cityDown && ' ггг '}
+            </div>
             <table className="Table">
               <thead>
                 <TableHead
-                  sortByNumber={sortByNumber}
+                  sortByNumber={sortById}
                   sortByName={sortByFirstName}
                   sortByLastName={sortByLastName}
                   sortByEmail={sortByEmail}
                   sortByPhone={sortByPhone}
-                  sortByAdress={sortByAdress}
+                  sortByCity={sortByCity}
                   number="Номер"
                   name="Имя"
                   lastName="Фамилия"
                   email="Email"
                   phone="Телефон"
-                  adress="Адрес"
+                  adress="Город"
                   description="Описание"
                 />
               </thead>
@@ -115,6 +162,7 @@ function Table() {
                   tableDataSearch.map((tableDataItem, index) => {
                     return (
                       <TableRow
+                        showUserCard={showUserCard}
                         key={index}
                         number={tableDataItem.id}
                         name={tableDataItem.firstName}
@@ -130,6 +178,7 @@ function Table() {
                   tableDataPagination.map((tableDataItem, index) => {
                     return (
                       <TableRow
+                        showUserCard={showUserCard}
                         key={index}
                         number={tableDataItem.id}
                         name={tableDataItem.firstName}
@@ -144,7 +193,7 @@ function Table() {
               </tbody>
             </table>
             <div className="Table__pagination-number">
-              {tableDataPages.map((pageNumber, index) => {
+              {!isSearch && tableDataPages.map((pageNumber, index) => {
                 return (
                   <PaginationNumber
                     key={index}
@@ -154,6 +203,16 @@ function Table() {
                 )
               })}
             </div>
+            {userCard &&
+              <UserInfo
+                firstName={userCard.firstName}
+                description={userCard.description}
+                streetAddress={userCard.adress.streetAddress}
+                city={userCard.adress.city}
+                state={userCard.adress.state}
+                zip={userCard.adress.zip}
+              />}
+
           </>
           :
           <div>is loading ....................</div>

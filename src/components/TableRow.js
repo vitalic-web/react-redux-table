@@ -2,7 +2,7 @@ import './TableRow.css';
 
 function TableRow(props) {
   return (
-    <tr className="TableRow">
+    <tr onClick={props.showUserCard} className="TableRow">
       <th className="TableRow__cell">{props.number}</th>
       <th className="TableRow__cell">{props.name}</th>
       <th className="TableRow__cell">{props.lastName}</th>

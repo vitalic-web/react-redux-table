@@ -3,6 +3,7 @@ function Search(props) {
     props.setSearchWord(e.target.value);
     if (!e.target.value) {
       props.setIsSearch(false);
+      props.setUserCard('');
     }
   }
 
