@@ -14,14 +14,104 @@ const initialState = {
 }
 
 // сортировка по возрастанию
-const sortByAscending = data => data.sort(function (a, b) {
-  return a.id - b.id;
-});
+const sortByAscending = (data, column) => {
+  switch (column) {
+    case 'Номер': {
+      return data.sort((a, b) => {
+        if (a.id < b.id) return -1;
+        if (a.id > b.id) return 1;
+        return 0;
+      })
+    }
+    case 'Имя': {
+      return data.sort((a, b) => {
+        if (a.firstName < b.firstName) return -1;
+        if (a.firstName > b.firstName) return 1;
+        return 0;
+      })
+    }
+    case 'Фамилия': {
+      return data.sort((a, b) => {
+        if (a.lastName < b.lastName) return -1;
+        if (a.lastName > b.lastName) return 1;
+        return 0;
+      })
+    }
+    case 'Email': {
+      return data.sort((a, b) => {
+        if (a.email < b.email) return -1;
+        if (a.email > b.email) return 1;
+        return 0;
+      })
+    }
+    case 'Телефон': {
+      return data.sort((a, b) => {
+        if (a.phone < b.phone) return -1;
+        if (a.phone > b.phone) return 1;
+        return 0;
+      })
+    }
+    case 'Адрес': {
+      return data.sort((a, b) => {
+        if (a.adress.city < b.adress.city) return -1;
+        if (a.adress.city > b.adress.city) return 1;
+        return 0;
+      })
+    }
+    default:
+      return data;
+  }
+};
 
 // сортировка по убыванию
-const sortByDescending = data => data.sort(function (a, b) {
-  return b.id - a.id;
-});
+const sortByDescending = (data, column) => {
+  switch (column) {
+    case 'Номер': {
+      return data.sort((a, b) => {
+        if (a.id > b.id) return -1;
+        if (a.id < b.id) return 1;
+        return 0;
+      })
+    }
+    case 'Имя': {
+      return data.sort((a, b) => {
+        if (a.firstName > b.firstName) return -1;
+        if (a.firstName < b.firstName) return 1;
+        return 0;
+      })
+    }
+    case 'Фамилия': {
+      return data.sort((a, b) => {
+        if (a.lastName > b.lastName) return -1;
+        if (a.lastName < b.lastName) return 1;
+        return 0;
+      })
+    }
+    case 'Email': {
+      return data.sort((a, b) => {
+        if (a.email > b.email) return -1;
+        if (a.email < b.email) return 1;
+        return 0;
+      })
+    }
+    case 'Телефон': {
+      return data.sort((a, b) => {
+        if (a.phone > b.phone) return -1;
+        if (a.phone < b.phone) return 1;
+        return 0;
+      })
+    }
+    case 'Адрес': {
+      return data.sort((a, b) => {
+        if (a.adress.city > b.adress.city) return -1;
+        if (a.adress.city < b.adress.city) return 1;
+        return 0;
+      })
+    }
+    default:
+      return data;
+  }
+};
 
 // массив для номеров страниц пагинации
 const numArr = num => {
@@ -60,7 +150,7 @@ export default function appReducer(state = initialState, action) {
         ...state,
         data: {
           ...state.data,
-          dataPagination: sortByAscending(state.data.dataPagination),
+          dataPagination: sortByAscending(state.data.dataPagination, action.payload),
         },
         filters: {
           ...state.filters,
@@ -73,7 +163,7 @@ export default function appReducer(state = initialState, action) {
         ...state,
         data: {
           ...state.data,
-          dataPagination: sortByDescending(state.data.dataPagination),
+          dataPagination: sortByDescending(state.data.dataPagination, action.payload),
         },
         filters: {
           ...state.filters,

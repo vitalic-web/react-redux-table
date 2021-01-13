@@ -17,11 +17,51 @@ function Table() {
   const [isSearch, setIsSearch] = useState(false);
 
   // сортировка по возрастанию/убыванию
-  const sort = () => {
+  const sortByNumber = () => {
     if (!filterByAscending) {
-      dispatch({ type: 'data/sortByAscending' });
+      dispatch({ type: 'data/sortByAscending', payload: 'Номер' });
     } else {
-      dispatch({ type: 'data/sortByDescending' });
+      dispatch({ type: 'data/sortByDescending', payload: 'Номер' });
+    }
+  }
+
+  const sortByFirstName = () => {
+    if (!filterByAscending) {
+      dispatch({ type: 'data/sortByAscending', payload: 'Имя' });
+    } else {
+      dispatch({ type: 'data/sortByDescending', payload: 'Имя' });
+    }
+  }
+
+  const sortByLastName = () => {
+    if (!filterByAscending) {
+      dispatch({ type: 'data/sortByAscending', payload: 'Фамилия' });
+    } else {
+      dispatch({ type: 'data/sortByDescending', payload: 'Фамилия' });
+    }
+  }
+
+  const sortByEmail = () => {
+    if (!filterByAscending) {
+      dispatch({ type: 'data/sortByAscending', payload: 'Email' });
+    } else {
+      dispatch({ type: 'data/sortByDescending', payload: 'Email' });
+    }
+  }
+
+  const sortByPhone = () => {
+    if (!filterByAscending) {
+      dispatch({ type: 'data/sortByAscending', payload: 'Телефон' });
+    } else {
+      dispatch({ type: 'data/sortByDescending', payload: 'Телефон' });
+    }
+  }
+
+  const sortByAdress = () => {
+    if (!filterByAscending) {
+      dispatch({ type: 'data/sortByAscending', payload: 'Адрес' });
+    } else {
+      dispatch({ type: 'data/sortByDescending', payload: 'Адрес' });
     }
   }
 
@@ -54,7 +94,12 @@ function Table() {
             <table className="Table">
               <thead>
                 <TableHead
-                  sort={sort}
+                  sortByNumber={sortByNumber}
+                  sortByName={sortByFirstName}
+                  sortByLastName={sortByLastName}
+                  sortByEmail={sortByEmail}
+                  sortByPhone={sortByPhone}
+                  sortByAdress={sortByAdress}
                   number="Номер"
                   name="Имя"
                   lastName="Фамилия"
