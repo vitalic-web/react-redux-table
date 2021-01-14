@@ -1,14 +1,36 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import './Table.css';
+import { makeStyles } from '@material-ui/styles';
+
 import TableHead from './TableHead';
 import TableRow from './TableRow';
 import PaginationNumber from './PaginationNumber';
 import Search from './Search';
 import UserInfo from './UserInfo';
 
+const useStyles = makeStyles({
+  tableContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  table: {
+    fontSize: '12px',
+    borderSpacing: '0',
+    borderCollapse: 'collapse',
+    width: '90%',
+  },
+  tablePaginationNumber: {
+    display: 'flex',
+    width: '50%',
+    justifyContent: 'space-between',
+  }
+});
+
 function Table() {
-  const tableData = useSelector(state => state.data.dataMain);
+  const TableStyle = useStyles();
+
   const tableDataPagination = useSelector(state => state.data.dataPagination);
   const tableDataPages = useSelector(state => state.data.dataPages);
   const tableDataSearch = useSelector(state => state.data.dataSearch);
@@ -102,7 +124,7 @@ function Table() {
   }
 
   return (
-    <div>
+    <div className={TableStyle.tableContainer}>
       {
         tableDataPagination.length
           ?
@@ -114,33 +136,45 @@ function Table() {
               setIsSearch={setIsSearch}
               setUserCard={setUserCard}
             />
-            <div>
-              {filters.id.idUp && ' ННН '}
-              {filters.id.idDown && ' ннн '}
-            </div>
-            <div>
+            {/* <div>
+              {filters.id.idUp && ' ▲ '}
+              {filters.id.idDown && ' ▼ '}
+            </div> */}
+            {/* <div>
               {filters.firstName.firstNameUp && ' ИИИ '}
               {filters.firstName.firstNameDown && ' иии '}
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               {filters.lastName.lastNameUp && ' ФФФ '}
               {filters.lastName.lastNameDown && ' ффф '}
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               {filters.email.emailUp && ' EEE '}
               {filters.email.emailDown && ' eee '}
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               {filters.phone.phoneUp && ' ТТТ '}
               {filters.phone.phoneDown && ' ттт '}
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               {filters.city.cityUp && ' ГГГ '}
               {filters.city.cityDown && ' ггг '}
-            </div>
-            <table className="Table">
+            </div> */}
+            <table className={TableStyle.table}>
               <thead>
                 <TableHead
+                  idUp={filters.id.idUp}
+                  idDown={filters.id.idDown}
+                  firstNameUp={filters.firstName.firstNameUp}
+                  firstNameDown={filters.firstName.firstNameDown}
+                  lastNameUp={filters.lastName.lastNameUp}
+                  lastNameDown={filters.lastName.lastNameDown}
+                  emailUp={filters.email.emailUp}
+                  emailDown={filters.email.emailDown}
+                  phoneUp={filters.phone.phoneUp}
+                  phoneDown={filters.phone.phoneDown}
+                  cityUp={filters.city.cityUp}
+                  cityDown={filters.city.cityDown}
                   sortByNumber={sortById}
                   sortByName={sortByFirstName}
                   sortByLastName={sortByLastName}
@@ -192,7 +226,7 @@ function Table() {
                   })}
               </tbody>
             </table>
-            <div className="Table__pagination-number">
+            <div className={TableStyle.tablePaginationNumber}>
               {!isSearch && tableDataPages.map((pageNumber, index) => {
                 return (
                   <PaginationNumber
