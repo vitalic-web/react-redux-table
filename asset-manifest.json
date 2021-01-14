@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/vitalic-web/react-redux-table/static/css/main.bddad35b.chunk.css",
-    "main.js": "/vitalic-web/react-redux-table/static/js/main.c415ccf9.chunk.js",
-    "main.js.map": "/vitalic-web/react-redux-table/static/js/main.c415ccf9.chunk.js.map",
-    "runtime-main.js": "/vitalic-web/react-redux-table/static/js/runtime-main.5ba5ec70.js",
-    "runtime-main.js.map": "/vitalic-web/react-redux-table/static/js/runtime-main.5ba5ec70.js.map",
-    "static/js/2.4f19f7fe.chunk.js": "/vitalic-web/react-redux-table/static/js/2.4f19f7fe.chunk.js",
-    "static/js/2.4f19f7fe.chunk.js.map": "/vitalic-web/react-redux-table/static/js/2.4f19f7fe.chunk.js.map",
-    "index.html": "/vitalic-web/react-redux-table/index.html",
-    "static/css/main.bddad35b.chunk.css.map": "/vitalic-web/react-redux-table/static/css/main.bddad35b.chunk.css.map",
-    "static/js/2.4f19f7fe.chunk.js.LICENSE.txt": "/vitalic-web/react-redux-table/static/js/2.4f19f7fe.chunk.js.LICENSE.txt"
+    "main.css": "/react-redux-table/static/css/main.bddad35b.chunk.css",
+    "main.js": "/react-redux-table/static/js/main.c415ccf9.chunk.js",
+    "main.js.map": "/react-redux-table/static/js/main.c415ccf9.chunk.js.map",
+    "runtime-main.js": "/react-redux-table/static/js/runtime-main.974804f7.js",
+    "runtime-main.js.map": "/react-redux-table/static/js/runtime-main.974804f7.js.map",
+    "static/js/2.4f19f7fe.chunk.js": "/react-redux-table/static/js/2.4f19f7fe.chunk.js",
+    "static/js/2.4f19f7fe.chunk.js.map": "/react-redux-table/static/js/2.4f19f7fe.chunk.js.map",
+    "index.html": "/react-redux-table/index.html",
+    "static/css/main.bddad35b.chunk.css.map": "/react-redux-table/static/css/main.bddad35b.chunk.css.map",
+    "static/js/2.4f19f7fe.chunk.js.LICENSE.txt": "/react-redux-table/static/js/2.4f19f7fe.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5ba5ec70.js",
+    "static/js/runtime-main.974804f7.js",
     "static/js/2.4f19f7fe.chunk.js",
     "static/css/main.bddad35b.chunk.css",
     "static/js/main.c415ccf9.chunk.js"
